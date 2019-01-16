@@ -58,7 +58,7 @@ v-data-table.girder-data-table(
             @click.stop="$emit('rowclick', props.item)")
           v-icon.pr-2(:color="props.selected ? 'accent' : ''") {{ $vuetify.icons[props.item.icon] }}
           | {{ props.item.name }}
-      td.text-xs-right.secondary--text.text--darken-3.nobreak {{ props.item.size }}
+      td.text-xs-right.secondary--text.text--darken-3.nobreak {{ props.item.humanSize }}
 
   template(slot="no-data")
     td.text-xs-center(colspan="2", width="100%") No Data Available

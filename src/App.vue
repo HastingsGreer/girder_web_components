@@ -15,7 +15,7 @@ v-app.app
           v-card-actions
             v-layout(column)
               v-checkbox.mt-2(hide-details, label="Select", v-model="selectEnabled")
-              v-checkbox.mt-1(hide-details, label="New Folder", v-model="newFolderEnabled")
+              v-checkbox.mt-1(hide-details, label="New Folder", v-model="newFolderEnabled") 
               v-checkbox.mt-1(hide-details, label="Upload", v-model="newItemEnabled")
               v-checkbox.mt-1.mb-1(hide-details, label="Search Box", v-model="searchEnabled")
     v-spacer
@@ -54,12 +54,15 @@ v-app.app
               @click:newitem="uploader = true",
               @click:newfolder="newFolder = true",
               @selection-changed="selected = $event")
+      .girder-data-details-container
+        girder-data-details(:data="detailsData")
 </template>
 
 <script>
 import {
   Authentication as GirderAuth,
   DataBrowser as GirderDataBrowser,
+  DataDetails as GirderDataDetails,
   Search as GirderSearch,
   Upload as GirderUpload,
   UpsertFolder as GirderUpsertFolder,
@@ -71,6 +74,7 @@ export default {
   components: {
     GirderAuth,
     GirderDataBrowser,
+    GirderDataDetails,
     GirderSearch,
     GirderUpload,
     GirderUpsertFolder,
@@ -117,7 +121,7 @@ export default {
         if (this.browserLocation) {
           return this.browserLocation;
         } else if (this.girderRest.user) {
-          return { _modelType: 'user', _id: this.girderRest.user._id };
+          return this.girderRest.user;
         }
         return null;
       },
@@ -134,6 +138,14 @@ export default {
       }
       return null;
     },
+    detailsData() {
+      if (this.selected.length) {
+        return this.selected;
+      } else if (this.location) {
+        return [this.location];
+      }
+      return [];
+    },
   },
   methods: {
     postUpload() {
@@ -149,7 +161,7 @@ export default {
       return new Promise(resolve => setTimeout(resolve, 400));
     },
     handleSearchSelect(item) {
-      if (['user', 'folder'].indexOf(item._modelType) >= 0) {
+      if (['user', 'folder'].includes(item._modelType)) {
         this.browserLocation = item;
       } else {
         this.browserLocation = { _modelType: 'folder', _id: item.folderId };
