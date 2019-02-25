@@ -6,6 +6,7 @@ import { DebounceCounter } from '../utils';
 const counter = new DebounceCounter();
 
 export default {
+  mixins: [usernameFormatter],
   props: {
     maxQuickResults: {
       type: Number,
@@ -17,7 +18,6 @@ export default {
     },
   },
   inject: ['girderRest'],
-  mixins: [usernameFormatter],
   data() {
     return {
       searchText: '',

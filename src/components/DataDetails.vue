@@ -20,9 +20,16 @@
       v-layout(row, justify-space-between)
         v-flex(shrink) {{ props.datum.key }}
         v-flex(shrink) {{ props.datum.value }}
-  girder-detail-list(v-if="files.length", :title="`Files (${files.length})`", :rows="files.map(f => f.name)")
-  girder-detail-list(v-if="actions.length", title="Actions", :rows="actions", :color="$vuetify.theme.secondary.lighten5")
-    v-layout(slot="row", slot-scope="props", column) 
+  girder-detail-list(
+      v-if="files.length",
+      :title="`Files (${files.length})`",
+      :rows="files.map(f => f.name)")
+  girder-detail-list(
+      v-if="actions.length",
+      title="Actions",
+      :rows="actions",
+      :color="$vuetify.theme.secondary.lighten5")
+    v-layout(slot="row", slot-scope="props", column)
       v-flex
         v-btn.ma-0.pl-0(flat, small, block,
             :color="props.datum.color",
@@ -41,8 +48,8 @@ function download(baseurl, modelType, id, query = '') {
   if (['resource', 'folder', 'item', 'file'].indexOf(modelType) < 0) {
     throw new Error(`${modelType} is not downloadable`);
   }
-  let idpart = id ? `${id}/` : '';
-  let url = `${baseurl}/${modelType}/${idpart}download${query}`;
+  const idpart = id ? `${id}/` : '';
+  const url = `${baseurl}/${modelType}/${idpart}download${query}`;
   window.open(url, '_blank');
 }
 
@@ -103,7 +110,8 @@ export const DEFAULT_ACTION_KEYS = [
     name: 'Bulk Move',
     icon: 'fileMove',
     color: 'secondary',
-    handler(items) {
+    handler() {
+      // eslint-disable-next-line no-alert
       alert('Bulk move unimplemented.');
     },
   },
@@ -128,6 +136,7 @@ export default {
     GirderMarkdown,
     GirderUpsertFolder,
   },
+  mixins: [sizeFormatter, usernameFormatter],
   props: {
     data: {
       required: true,
@@ -148,7 +157,6 @@ export default {
     };
   },
   inject: ['girderRest'],
-  mixins: [sizeFormatter, usernameFormatter],
   asyncComputed: {
     async details() {
       // Use created as a litmus text for the existence of the rest of the data model.
@@ -174,13 +182,17 @@ export default {
   },
   computed: {
     title() {
-      return this.datum ? (this.datum.name || this.formatUsername(this.datum)) : `${this.data.length} Selections`;
+      return this.datum
+        ? (this.datum.name || this.formatUsername(this.datum))
+        : `${this.data.length} Selections`;
     },
     datum() {
       return this.data.length === 1 ? this.data[0] : undefined;
     },
     icon() {
-      return this.datum ? this.$vuetify.icons[this.datum._modelType] : this.$vuetify.icons.fileMultiple;
+      return this.datum
+        ? this.$vuetify.icons[this.datum._modelType]
+        : this.$vuetify.icons.fileMultiple;
     },
     meta() {
       if (this.details && 'meta' in this.details) {
@@ -205,7 +217,7 @@ export default {
         /* If this is a multi-selection */
         const reducer = (acc, curr) => {
           acc[curr._modelType] += 1;
-          acc['size'] += curr.size;
+          acc.size += curr.size;
           return acc;
         };
         const typeCounts = this.data.reduce(reducer, {
@@ -216,7 +228,7 @@ export default {
         const countMessages = ['item', 'folder']
           .filter(k => typeCounts[k] > 0)
           .map(k => `${typeCounts[k]} ${k}(s) selected`);
-        const sizeMessage = `Total size: ${this.formatSize(typeCounts['size'])}`;
+        const sizeMessage = `Total size: ${this.formatSize(typeCounts.size)}`;
         return [...countMessages, sizeMessage];
       }
       return [];
@@ -230,17 +242,18 @@ export default {
     async handleAction(action) {
       await action.handler(this.data, this);
       this.$emit('action', action);
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .data-details {
   width: 100%;
-}
-.details-title {
-  font-size: 16px;
+
+  .details-title {
+    font-size: 16px;
+  }
 }
 </style>
 
