@@ -21,9 +21,11 @@ export default {
     box_com: 'mdi-package',
     chevron: 'mdi-chevron-right',
     circle: 'mdi-checkbox-blank-circle',
+    download: 'mdi-download',
     collection: 'mdi-file-tree',
     edit: 'mdi-pencil',
     file: 'mdi-file',
+    fileMove: 'mdi-file-move',
     fileNew: 'mdi-file-plus',
     fileUpload: 'mdi-file-upload',
     folder: 'mdi-folder',
@@ -43,5 +45,6 @@ export default {
     search: 'mdi-magnify',
     settings: 'mdi-tune',
     user: 'mdi-account',
+    view: 'mdi-eye',
   },
 };

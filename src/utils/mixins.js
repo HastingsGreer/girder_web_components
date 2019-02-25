@@ -21,6 +21,23 @@ const sizeFormatter = {
   },
 };
 
+const dateFormatter = {
+  methods: {
+    formatDate(datestring) {
+      const d = new Date(datestring);
+      return d.toLocaleString();
+    },
+  },
+};
+
+const usernameFormatter = {
+  methods: {
+    formatUsername(user) {
+      return `${user.firstName} ${user.lastName} (${user.login})`;
+    },
+  },
+};
+
 /**
  * This mixin exposes helper methods for components that need to check that the current user has
  * a certain access level on a given resource.
@@ -48,6 +65,8 @@ const progressReporter = {
 
 export {
   accessLevelChecker,
+  dateFormatter,
   progressReporter,
   sizeFormatter,
+  usernameFormatter,
 };

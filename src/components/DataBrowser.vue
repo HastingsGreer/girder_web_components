@@ -153,7 +153,7 @@ export default {
       const responses = (await Promise.all(promises)).map(response => response.data);
       const rows = [].concat.apply(...responses).map(item => ({
         ...item,
-        size: item.size ? this.formatSize(item.size) : '',
+        humanSize: item.size ? this.formatSize(item.size) : '',
         icon: item._modelType in this.$vuetify.icons
           ? item._modelType
           : 'file',

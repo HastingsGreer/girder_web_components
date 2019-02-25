@@ -1,5 +1,6 @@
 
 <script>
+import { usernameFormatter } from '../utils/mixins';
 import { DebounceCounter } from '../utils';
 
 const counter = new DebounceCounter();
@@ -16,6 +17,7 @@ export default {
     },
   },
   inject: ['girderRest'],
+  mixins: [usernameFormatter],
   data() {
     return {
       searchText: '',
@@ -60,11 +62,6 @@ export default {
         counter.dec();
         return results;
       },
-    },
-  },
-  methods: {
-    formatUsername(user) {
-      return `${user.firstName} ${user.lastName} (${user.login})`;
     },
   },
 };

@@ -1,7 +1,7 @@
 <template lang="pug">
 v-app.app
   v-toolbar.toolbar-main(v-show="!loggedOut", color="primary", dark)
-    v-toolbar-title Girder Web Components
+    v-toolbar-title Girder Web Components Demo
     v-toolbar-items
       v-menu(
           offset-y,
@@ -17,7 +17,8 @@ v-app.app
               v-checkbox.mt-2(hide-details, label="Select", v-model="selectEnabled")
               v-checkbox.mt-1(hide-details, label="New Folder", v-model="newFolderEnabled")
               v-checkbox.mt-1(hide-details, label="Upload", v-model="newItemEnabled")
-              v-checkbox.mt-1.mb-1(hide-details, label="Search Box", v-model="searchEnabled")
+              v-checkbox.mt-1(hide-details, label="Search Box", v-model="searchEnabled")
+              v-checkbox.mt-1.mb-1(hide-details, label="Details", v-model="detailsEnabled")
     v-spacer
     girder-search(v-if="searchEnabled", @select="handleSearchSelect")
     v-btn(flat, icon, @click="girderRest.logout()")
@@ -55,12 +56,16 @@ v-app.app
               @click:newitem="uploader = true",
               @click:newfolder="newFolder = true",
               @selection-changed="selected = $event")
+      v-flex(shrink)
+        v-card(v-if="detailsEnabled", flat, style="width: 320px;")
+          girder-data-details(:data="detailsData", @action="handleAction")
 </template>
 
 <script>
 import {
   Authentication as GirderAuth,
   DataBrowser as GirderDataBrowser,
+  DataDetails as GirderDataDetails,
   Search as GirderSearch,
   Upload as GirderUpload,
   UpsertFolder as GirderUpsertFolder,
@@ -72,6 +77,7 @@ export default {
   components: {
     GirderAuth,
     GirderDataBrowser,
+    GirderDataDetails,
     GirderSearch,
     GirderUpload,
     GirderUpsertFolder,
@@ -88,6 +94,7 @@ export default {
       newItemEnabled: true,
       newFolderEnabled: true,
       searchEnabled: true,
+      detailsEnabled: true,
       selected: [],
     };
   },
@@ -113,12 +120,20 @@ export default {
     },
   },
   computed: {
+    detailsData() {
+      if (this.selected.length) {
+        return this.selected;
+      } else if (this.location) {
+        return [this.location];
+      }
+      return [];
+    },
     location: {
       get() {
         if (this.browserLocation) {
           return this.browserLocation;
         } else if (this.girderRest.user) {
-          return { _modelType: 'user', _id: this.girderRest.user._id };
+          return this.girderRest.user;
         }
         return null;
       },
@@ -148,6 +163,12 @@ export default {
       this.$refs.girderBrowser.refresh();
       this.newFolder = false;
       return new Promise(resolve => setTimeout(resolve, 400));
+    },
+    handleAction(action) {
+      if (action.name === 'Delete') {
+        this.$refs.girderBrowser.refresh();
+        this.selected = [];
+      }
     },
     handleSearchSelect(item) {
       if (['user', 'folder'].indexOf(item._modelType) >= 0) {
