@@ -44,7 +44,7 @@ v-app.app
           :drag-enabled="dragEnabled",
           :new-folder-enabled="newFolderEnabled",
           :selectable="selectable",
-          :location.sync="location",
+          :location="{type:'root'}",
           :root-location-disabled="rootLocationDisabled",
           :upload-multiple="uploadMultiple",
           :upload-enabled="uploadEnabled",

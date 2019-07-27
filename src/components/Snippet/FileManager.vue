@@ -79,18 +79,15 @@ export default {
     return {
       uploaderDialog: false,
       newFolderDialog: false,
-      lazyLocation: null,
+      lazyLocation: this.location,
     };
   },
 
   computed: {
     internalLocation: {
       get() {
-        const { location, lazyLocation } = this;
-        if (location) {
-          return location;
-        } else if (lazyLocation) {
-          return lazyLocation;
+        if (this.lazyLocation) {
+          return this.lazyLocation;
         }
         return { type: 'root' };
       },
@@ -110,6 +107,14 @@ export default {
         && !isRootLocation(this.internalLocation)
         && this.girderRest.user
         && this.uploadDest;
+    },
+  },
+
+  watch: {
+    location(location) {
+      if (createLocationValidator(!this.rootLocationDisabled)(location)) {
+        this.lazyLocation = location;
+      }
     },
   },
 
