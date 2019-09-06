@@ -38,6 +38,14 @@ export default {
     items() {
       return this.jobs.map(this.mapJobToRow);
     },
+    headers_() {
+      const widgetHeader = {
+        sortable: false,
+        align: 'end',
+      };
+      console.log(this.$scopedSlots.jobwidget)
+      return this.headers.concat(this.$scopedSlots.jobwidget ? widgetHeader : []);
+    },
     serverItemsLength() {
       let { last } = this.pageRange;
       if (this.morePages) {
@@ -79,7 +87,7 @@ export default {
 v-data-table(
     light,
     item-key="_id",
-    :headers="headers",
+    :headers="headers_",
     :items="items",
     :server-items-length="serverItemsLength",
     :options="options",
@@ -100,7 +108,8 @@ v-data-table(
               :color="props.item.statusColor",
               :class="{ rotate: props.item.spin }",
               :size="20") {{ props.item.statusIcon }}
-
+      td.one-line.pa-0
+        slot(name="jobwidget", v-bind="props")
   template(#pageText="")
     .v-datatable__actions__options {{ pageRange.first }}-{{ pageRange.last }}
 </template>
