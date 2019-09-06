@@ -43,7 +43,6 @@ export default {
         sortable: false,
         align: 'end',
       };
-      console.log(this.$scopedSlots.jobwidget)
       return this.headers.concat(this.$scopedSlots.jobwidget ? widgetHeader : []);
     },
     serverItemsLength() {
