@@ -168,8 +168,7 @@ export default {
           template(#headerwidget)
             slot(name="headerwidget")
             v-dialog(v-model="uploaderDialog",
-                v-if="shouldShowUpload",
-                full-width, max-width="800px")
+                v-if="shouldShowUpload", max-width="800px")
               template(#activator="{ on }")
                 v-btn.ma-0(
                     v-on="on",
@@ -185,8 +184,7 @@ export default {
                   :multiple="uploadMultiple",
                   :accept="uploadAccept")
             v-dialog(v-model="newFolderDialog",
-                v-if="newFolderEnabled && !isRootLocation(internalLocation) && girderRest.user",
-                full-width, max-width="800px")
+                v-if="newFolderEnabled && !isRootLocation(internalLocation) && girderRest.user", max-width="800px")
               template(#activator="{ on }")
                 v-btn.ma-0(
                     v-on="on",

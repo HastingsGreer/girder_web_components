@@ -172,6 +172,7 @@ export default {
     },
     refresh() {
       this.internalRefreshCounter += 1;
+      this.$refs.fileBrowser.unselectAll();
     },
     async fetchPaginatedRows() {
       const { location, counts } = this;
@@ -279,6 +280,7 @@ export default {
 
 <template lang="pug">
 girder-data-table.girder-file-browser(
+    ref="fileBrowser"
     v-model="selected",
     :draggable="draggable",
     :rows="rows",

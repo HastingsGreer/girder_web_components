@@ -63,12 +63,16 @@ export default {
       const itemSelectable = getLocationType(item) !== 'item';
       return { 'select-cursor': itemSelectable };
     },
+    unselectAll() {
+      this.$refs.dataTable.selection = [];
+    },
   },
 };
 </script>
 
 <template lang="pug">
 v-data-table.girder-data-table(
+    ref="dataTable",
     show-select,
     :headers-length="4",
     :value="value",
